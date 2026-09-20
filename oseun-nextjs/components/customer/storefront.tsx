@@ -10,11 +10,9 @@ import {
   MapPin,
   Utensils,
   Gift,
-  ReceiptText,
   Leaf,
   Flame,
   Check,
-  ShieldCheck,
   Bike,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,13 +26,13 @@ import {
 } from "@/components/ui/dialog";
 import {
   meals,
+  DELIVERY_FEE,
   extraOptions,
   money,
   lineTotal,
   type Meal,
   type Line,
 } from "@/lib/menu";
-import Link from "next/link";
 import { Brand } from "@/components/brand";
 export default function Home() {
   const [view, setView] = useState("menu"),
@@ -46,16 +44,14 @@ export default function Home() {
     [note, setNote] = useState("");
   const [cart, setCart] = useState<Line[]>([]),
     [cartOpen, setCartOpen] = useState(false),
-    [checkout, setCheckout] = useState(false),
-    [confirmed, setConfirmed] = useState(false),
-    [payment, setPayment] = useState("card");
+    [checkout, setCheckout] = useState(false);
   const [giftAmount, setGiftAmount] = useState(10000),
     [giftPreview, setGiftPreview] = useState(false),
     [info, setInfo] = useState(false),
     [message, setMessage] = useState("");
   const subtotal = cart.reduce((s, l) => s + lineTotal(l), 0),
     count = cart.reduce((s, l) => s + l.qty, 0),
-    delivery = cart.length ? 1500 : 0;
+    delivery = cart.length ? DELIVERY_FEE : 0;
   const filtered = meals.filter(
     (m) =>
       (category === "All meals" || m.category === category) &&
@@ -201,14 +197,11 @@ export default function Home() {
           onClick={() => {
             setCartOpen(false);
             setCheckout(true);
-            setConfirmed(false);
           }}
         >
-          Continue to checkout <ArrowRight size={17} />
+          Review your order <ArrowRight size={17} />
         </Button>
-        <p className="cart-foot">
-          <ShieldCheck size={14} /> UI preview · no payment collected
-        </p>
+        <p className="cart-foot">Delivery: {money(DELIVERY_FEE)} per order</p>
       </div>
     );
   }
@@ -228,7 +221,7 @@ export default function Home() {
         <nav aria-label="Main navigation">
           {[
             ["menu", "Our menu"],
-            ["orders", "My orders"],
+            ["about", "Our kitchen"],
             ["gifts", "Gift cards"],
           ].map(([id, label]) => (
             <button
@@ -241,7 +234,6 @@ export default function Home() {
           ))}
         </nav>
         <div className="top-actions">
-          <span className="preview-pill">UI preview</span>
           <button
             className="cart-mobile icon-button"
             aria-label={"Open cart, " + count + " items"}
@@ -250,9 +242,7 @@ export default function Home() {
             <ShoppingBag size={21} />
             {count > 0 && <sup>{count}</sup>}
           </button>
-          <Link className="workspace-link" href="/workspaces">
-            Workspaces
-          </Link>
+          <span className="header-tagline">Tasty. Healthy. Delightful.</span>
         </div>
       </header>
       <div className="subbar">
@@ -301,7 +291,17 @@ export default function Home() {
                   >
                     Make it yours <ArrowRight size={17} />
                   </Button>
-                  <small>Rice from {money(1500)} / portion · minimum 2</small>
+                  <small>
+                    Rice from{" "}
+                    {money(
+                      Math.min(
+                        ...meals
+                          .filter((m) => m.category === "Rice")
+                          .map((m) => m.price),
+                      ),
+                    )}{" "}
+                    / portion · minimum 2
+                  </small>
                 </div>
                 <div className="feature-photo">
                   <img
@@ -403,22 +403,44 @@ export default function Home() {
               )}
               <div className="menu-footer">
                 <span>Freshly prepared. Full of flavour.</span>
-                <span>Sample menu & prices for design review</span>
+                <span>
+                  Rice portions start at 2 · Extras charged separately
+                </span>
               </div>
             </>
-          ) : view === "orders" ? (
-            <section className="secondary-page">
-              <span className="eyebrow">YOUR TABLE, YOUR WAY</span>
-              <h1>My orders</h1>
-              <div className="empty-page">
-                <ReceiptText size={46} strokeWidth={1.2} />
-                <h2>Your next favourite is waiting.</h2>
+          ) : view === "about" ? (
+            <section className="secondary-page about-kitchen">
+              <span className="eyebrow">WELCOME TO O’SEUN FOODS</span>
+              <h1>Tasty. Healthy. Delightful.</h1>
+              <p>A little taste of home, made your way.</p>
+              <img
+                className="kitchen-image"
+                src="/jollof.jpg"
+                alt="A serving of jollof rice, chicken and plantain"
+              />
+              <div className="kitchen-details">
+                <h2>Your plate, your choice.</h2>
                 <p>
-                  Your real order history will appear here once accounts and
-                  ordering are connected.
+                  Explore our rice dishes, proteins, sides and drinks. Choose
+                  your portions and add the extras you love.
                 </p>
+                <div className="service-facts">
+                  <span>
+                    Rice from{" "}
+                    {money(
+                      Math.min(
+                        ...meals
+                          .filter((m) => m.category === "Rice")
+                          .map((m) => m.price),
+                      ),
+                    )}{" "}
+                    / portion
+                  </span>
+                  <span>Minimum 2 rice portions</span>
+                  <span>Delivery {money(DELIVERY_FEE)}</span>
+                </div>
                 <Button className="primary" onClick={() => setView("menu")}>
-                  Explore the menu <ArrowRight size={16} />
+                  Explore our menu <ArrowRight size={16} />
                 </Button>
               </div>
             </section>
@@ -450,11 +472,11 @@ export default function Home() {
                 ))}
               </div>
               <Button className="primary" onClick={() => setGiftPreview(true)}>
-                Preview gift card <ArrowRight size={16} />
+                View gift card <ArrowRight size={16} />
               </Button>
               <p className="muted">
-                Gift-card purchasing will be available when payments are
-                connected.
+                Gift cards are coming soon. They are not available to buy or
+                redeem yet.
               </p>
             </section>
           )}
@@ -466,7 +488,7 @@ export default function Home() {
       <footer className="site-footer">
         <span className="wordmark">O’Seun Foods</span>
         <span>Good food brings us together.</span>
-        <span>O’Seun · Interface preview</span>
+        <span>Tasty. Healthy. Delightful.</span>
       </footer>
       {count > 0 && (
         <Button className="mobile-cart-bar" onClick={() => setCartOpen(true)}>
@@ -578,114 +600,68 @@ export default function Home() {
       </Dialog>
       <Dialog open={checkout} onOpenChange={setCheckout}>
         <DialogContent className="checkout-dialog">
-          <DialogTitle>
-            {confirmed
-              ? "Your order preview is ready"
-              : "Let’s bring it to you"}
-          </DialogTitle>
+          <DialogTitle>Your order summary</DialogTitle>
           <DialogDescription>
-            {confirmed
-              ? "This was a preview. No order was sent and no payment was taken."
-              : "Preview checkout with sample details. Nothing entered here is sent to a server."}
+            Review your meals, portions and delivery charge.
           </DialogDescription>
-          {confirmed ? (
-            <div className="confirmation">
-              <span className="bag-circle">
-                <Check size={36} />
-              </span>
-              <h3>
-                {count} items · {money(subtotal + delivery)}
-              </h3>
-              <p>
-                Your chosen meals and payment option are ready for the next
-                stage of development.
-              </p>
-              <Button className="primary" onClick={() => setCheckout(false)}>
-                Back to menu
-              </Button>
+          <ul className="review-lines">
+            {cart.map((line) => {
+              const meal = meals.find((m) => m.id === line.id)!;
+              return (
+                <li key={line.key}>
+                  <div>
+                    <strong>
+                      {line.qty} × {meal.name}
+                    </strong>
+                    {line.extras.length > 0 && (
+                      <small>
+                        With{" "}
+                        {extraOptions
+                          .filter((e) => line.extras.includes(e.id))
+                          .map((e) => e.name)
+                          .join(", ")}{" "}
+                        per portion
+                      </small>
+                    )}
+                    {line.note && <small>{line.note}</small>}
+                  </div>
+                  <b>{money(lineTotal(line))}</b>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="cart-totals">
+            <div>
+              <span>Meals and extras</span>
+              <span>{money(subtotal)}</span>
             </div>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setConfirmed(true);
-              }}
-            >
-              <div className="form-grid">
-                <div>
-                  <Label htmlFor="name">Recipient name</Label>
-                  <Input
-                    id="name"
-                    required
-                    autoComplete="off"
-                    placeholder="Sample recipient"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="phone">Phone number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    required
-                    pattern="[+0-9 ]{10,18}"
-                    placeholder="0800 000 0000"
-                    autoComplete="off"
-                  />
-                </div>
-              </div>
-              <Label htmlFor="address">Delivery address</Label>
-              <Input
-                id="address"
-                required
-                minLength={8}
-                placeholder="Street, area and city"
-                autoComplete="off"
-              />
-              <fieldset className="payment-choices">
-                <legend>Payment method preview</legend>
-                {[
-                  ["card", "Debit card"],
-                  ["transfer", "Bank transfer"],
-                  ["gift", "Gift card + balance"],
-                ].map(([id, label]) => (
-                  <label key={id}>
-                    <input
-                      type="radio"
-                      name="payment"
-                      value={id}
-                      checked={payment === id}
-                      onChange={() => setPayment(id)}
-                    />
-                    {label}
-                  </label>
-                ))}
-              </fieldset>
-              {payment === "gift" && (
-                <p className="helper">
-                  A connected gift card will cover its available balance. Any
-                  remaining amount can be paid online.
-                </p>
-              )}
-              <div className="checkout-summary">
-                <span>Order + estimated delivery</span>
-                <strong>{money(subtotal + delivery)}</strong>
-              </div>
-              <Button type="submit" className="primary">
-                Preview order <ArrowRight size={17} />
-              </Button>
-              <p className="helper">
-                Payment processing and delivery availability are not connected
-                in this UI preview.
-              </p>
-            </form>
-          )}
+            <div>
+              <span>Delivery</span>
+              <span>{money(delivery)}</span>
+            </div>
+            <div className="total">
+              <strong>Total</strong>
+              <strong>{money(subtotal + delivery)}</strong>
+            </div>
+          </div>
+          <div className="ordering-notice">
+            <h3>Online ordering opens soon</h3>
+            <p>
+              You can explore the menu and build your meal. We are not accepting
+              orders or payments through this website yet.
+            </p>
+          </div>
+          <Button className="primary" onClick={() => setCheckout(false)}>
+            Continue browsing <ArrowRight size={17} />
+          </Button>
         </DialogContent>
       </Dialog>
       <Dialog open={giftPreview} onOpenChange={setGiftPreview}>
         <DialogContent>
           <DialogTitle>A little gift, a lovely meal</DialogTitle>
           <DialogDescription>
-            Your selected design. Purchasing is not enabled in this preview.
+            A thoughtful way to share good food. Gift cards are coming soon;
+            purchasing and redemption are not available yet.
           </DialogDescription>
           <div className="gift-design small">
             <span className="wordmark">O’Seun Foods</span>
@@ -701,12 +677,11 @@ export default function Home() {
         <DialogContent>
           <DialogTitle>Good food for the whole team</DialogTitle>
           <DialogDescription>
-            The company workspace will let an authorized representative browse
-            corporate menus, place bulk orders and track company deliveries.
+            Meals for meetings, office lunches and team celebrations.
           </DialogDescription>
           <p>
-            Company accounts and bulk pricing are planned for the next UI stage.
-            You can explore the customer menu now.
+            Online company ordering is coming soon. Explore our menu while we
+            prepare this service.
           </p>
           <Button
             className="primary"

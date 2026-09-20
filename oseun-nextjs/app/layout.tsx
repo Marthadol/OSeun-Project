@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "O’Seun Foods | Tasty. Healthy. Delightful.",
-  description: "O’Seun Foods restaurant web application — development preview.",
+  description:
+    "Explore the O’Seun Foods menu: rice dishes, proteins, sides and drinks. Tasty. Healthy. Delightful.",
   icons: {
     icon: "/oseun-logo.jpeg",
     apple: "/oseun-logo.jpeg",
@@ -19,5 +20,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-

@@ -3,7 +3,7 @@ export const meals = [
     id: "jollof",
     name: "Smoky party jollof",
     category: "Rice",
-    price: 1500,
+    price: 1000,
     min: 2,
     unit: "portion",
     tag: "The crowd favourite",
@@ -14,7 +14,7 @@ export const meals = [
     id: "fried",
     name: "Nigerian fried rice",
     category: "Rice",
-    price: 1800,
+    price: 1000,
     min: 2,
     unit: "portion",
     tag: "Colourful & flavourful",
@@ -90,3 +90,6 @@ export const lineTotal = (l: Line) =>
       .filter((e) => l.extras.includes(e.id))
       .reduce((s, e) => s + e.price, 0)) *
   l.qty;
+
+// Flat delivery charge until location-based pricing is connected.
+export const DELIVERY_FEE = 1500;

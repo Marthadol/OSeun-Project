@@ -1459,3 +1459,116 @@ th {
     height: 110px;
   }
 }
+
+/* Compact brand header. Scale both dimensions so the complete logo stays visible. */
+.brand-logo {
+  width: 96px;
+  height: 86px;
+}
+.topbar {
+  min-height: 88px;
+}
+.header-tagline {
+  color: #666;
+  font-size: 12px;
+  font-style: italic;
+}
+.cart-foot {
+  color: #666;
+}
+.kitchen-image {
+  width: 100%;
+  max-height: 360px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin: 22px 0;
+}
+.kitchen-details {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 26px;
+}
+.kitchen-details h2 {
+  font:
+    30px Georgia,
+    serif;
+}
+.kitchen-details p {
+  margin: 14px 0;
+  color: #666;
+}
+.service-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+.service-facts span {
+  border: 1px solid #eee;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.review-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.review-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+.review-lines small {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+}
+.review-lines b {
+  white-space: nowrap;
+}
+.ordering-notice {
+  border-left: 3px solid #f39800;
+  padding: 14px;
+  background: #fff7e8;
+}
+.ordering-notice h3 {
+  font-size: 16px;
+  margin-bottom: 7px;
+}
+.ordering-notice p {
+  color: #59472d;
+  font-size: 14px;
+}
+@media (max-width: 900px) {
+  .header-tagline {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .topbar {
+    min-height: 0;
+    gap: 0;
+    padding-top: 0;
+  }
+  .topbar .brand-logo,
+  .portal-header .brand-logo {
+    width: 78px;
+    height: 70px;
+  }
+  .topbar nav {
+    height: 40px;
+  }
+  .topbar .wordmark {
+    justify-self: start;
+  }
+  .kitchen-details {
+    padding: 20px;
+  }
+  .review-lines {
+    font-size: 14px;
+  }
+}
